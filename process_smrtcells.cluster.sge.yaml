@@ -1,6 +1,6 @@
 __default__:
   account: 100humans
-  partition: default
+  partition: para.q
   cpus: 1
   extra: ""
   out: "./cluster_logs/sge-$JOB_NAME-$JOB_ID-$HOSTNAME.out"

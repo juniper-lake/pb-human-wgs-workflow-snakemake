@@ -4,7 +4,7 @@
 #$ -V
 #$ -j y
 #$ -S /bin/bash
-#$ -q default
+#$ -q para.q
 #$ -o ./cluster_logs/sge-$JOB_NAME-$JOB_ID-$HOSTNAME.out
 #$ -e ./cluster_logs/sge-$JOB_NAME-$JOB_ID-$HOSTNAME.err
 

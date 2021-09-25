@@ -4,7 +4,7 @@
 #$ -V
 #$ -j y
 #$ -S /bin/bash
-#$ -q default
+#$ -q para.q
 #$ -pe smp 4
 #$ -o ./cluster_logs/sge-$JOB_NAME-$JOB_ID-$HOSTNAME.out
 #$ -e ./cluster_logs/sge-$JOB_NAME-$JOB_ID-$HOSTNAME.err
@@ -30,7 +30,7 @@ snakemake --reason \
     --jobs 500 \
     --max-jobs-per-second 1 \
     --use-conda --conda-frontend conda \
-    --use-singularity --singularity-args '--nv ' \
+    --use-singularity \
     --latency-wait 90 \
     --cluster-config workflow/process_cohort.cluster.sge.yaml \
     --cluster "qsub -j y -cwd -V \

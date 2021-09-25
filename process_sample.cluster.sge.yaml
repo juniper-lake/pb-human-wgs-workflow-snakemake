@@ -1,6 +1,6 @@
 __default__:
   account: 100humans
-  partition: default
+  partition: para.q
   cpus: 1
   extra: ""
   out: "./cluster_logs/sge-$JOB_NAME-$JOB_ID-$HOSTNAME.out"
@@ -9,10 +9,16 @@ pbsv_call:
   cpus: 8
 bgzip_vcf:
   cpus: 2
-deepvariant_round1:
-  cpus: 60
-deepvariant_round2:
-  cpus: 60
+deepvariant_call_variants_gpu_round1:
+  partition: mem.q
+  cpus: 72
+deepvariant_postprocess_variants_round1:
+  cpus: 4
+deepvariant_call_variants_gpu_round2:
+  partition: mem.q
+  cpus: 72
+deepvariant_postprocess_variants_round2:
+  cpus: 4
 deepvariant_bcftools_stats:
   cpus: 4
 generate_last_index:
@@ -20,10 +26,11 @@ generate_last_index:
 last_align:
   cpus: 24
 jellyfish_histo:
-  cpus: 48
+  cpus: 24
 samtools_fasta:
   cpus: 4
 hifiasm_assemble:
+  partition: mem.q
   cpus: 48
 bgzip_fasta:
   cpus: 4
