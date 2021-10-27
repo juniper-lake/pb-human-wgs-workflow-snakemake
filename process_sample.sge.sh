@@ -30,7 +30,7 @@ snakemake --reason \
     --jobs 500 \
     --max-jobs-per-second 1 \
     --use-conda --conda-frontend conda \
-    --use-singularity \
+    --use-singularity --singularity-args '--nv ' \
     --latency-wait 120 \
     --cluster-config workflow/process_sample.cluster.sge.yaml \
     --cluster "qsub -j y -cwd -V \
