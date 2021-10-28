@@ -11,12 +11,12 @@ bgzip_vcf:
   cpus: 2
 deepvariant_call_variants_gpu_round1:
   partition: default
-  cpus: 72
+  cpus: 8
 deepvariant_postprocess_variants_round1:
   cpus: 4
 deepvariant_call_variants_gpu_round2:
   partition: default
-  cpus: 72
+  cpus: 8
 deepvariant_postprocess_variants_round2:
   cpus: 4
 deepvariant_bcftools_stats:
