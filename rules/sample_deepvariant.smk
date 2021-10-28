@@ -40,7 +40,7 @@ rule deepvariant_call_variants_gpu_round1:
     benchmark: f"samples/{sample}/benchmarks/deepvariant_intermediate/call_variants/{sample}.{ref}.tsv"
     container: f"docker://google/deepvariant:{config['DEEPVARIANT_VERSION']}"
     params: model = "/opt/models/pacbio/model.ckpt"
-    threads: 72
+    threads: 8
     message: "Executing {rule}: DeepVariant call_variants for {input}."
     shell:
         f"""
@@ -118,7 +118,7 @@ rule deepvariant_call_variants_gpu_round2:
     container: f"docker://google/deepvariant:{config['DEEPVARIANT_VERSION']}"
     params: model = "/opt/models/pacbio/model.ckpt"
     message: "Executing {rule}: DeepVariant call_variants for {input}."
-    threads: 72
+    threads: 8
     shell:
         f"""
         (echo "CUDA_VISIBLE_DEVICES=" $CUDA_VISIBLE_DEVICES; \
