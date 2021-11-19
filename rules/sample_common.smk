@@ -3,7 +3,7 @@ localrules: bgzip_vcf, tabix_vcf
 
 rule bgzip_vcf:
     input: f"samples/{sample}/{{prefix}}.vcf"
-    output: f"samples/{sample}/{{prefix}}.vcf.gz"
+    output: temp(f"samples/{sample}/{{prefix}}.vcf.gz")
     log: f"samples/{sample}/logs/bgzip/{{prefix}}.log"
     benchmark: f"samples/{sample}/benchmarks/bgzip/{{prefix}}.tsv"
     threads: 2
@@ -14,7 +14,7 @@ rule bgzip_vcf:
 
 rule tabix_vcf:
     input: f"samples/{sample}/{{prefix}}.vcf.gz"
-    output: f"samples/{sample}/{{prefix}}.vcf.gz.tbi"
+    output: temp(f"samples/{sample}/{{prefix}}.vcf.gz.tbi")
     log: f"samples/{sample}/logs/tabix/index/{{prefix}}.log"
     benchmark: f"samples/{sample}/benchmarks/tabix/index/{{prefix}}.tsv"
     params: "-p vcf"
@@ -25,7 +25,7 @@ rule tabix_vcf:
 
 rule samtools_index_bam:
     input: f"samples/{sample}/{{prefix}}.bam"
-    output: f"samples/{sample}/{{prefix}}.bam.bai"
+    output: temp(f"samples/{sample}/{{prefix}}.bam.bai")
     log: f"samples/{sample}/logs/samtools/index/{{prefix}}.log"
     benchmark: f"samples/{sample}/logs/samtools/index/{{prefix}}.tsv"
     threads: 4

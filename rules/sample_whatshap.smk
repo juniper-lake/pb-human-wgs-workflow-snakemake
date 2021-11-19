@@ -40,7 +40,7 @@ rule whatshap_bcftools_concat_round1:
     input:
         calls = expand(f"samples/{sample}/whatshap_intermediate/{sample}.{ref}.regions/{sample}.{ref}.{{region}}.deepvariant.phased.vcf.gz", region=all_chroms),
         indices = expand(f"samples/{sample}/whatshap_intermediate/{sample}.{ref}.regions/{sample}.{ref}.{{region}}.deepvariant.phased.vcf.gz.tbi", region=all_chroms)
-    output: f"samples/{sample}/whatshap_intermediate/{sample}.{ref}.deepvariant.phased.vcf.gz"
+    output: temp(f"samples/{sample}/whatshap_intermediate/{sample}.{ref}.deepvariant.phased.vcf.gz")
     log: f"samples/{sample}/logs/bcftools/concat/{sample}.{ref}.whatshap_intermediate.log"
     benchmark: f"samples/{sample}/benchmarks/bcftools/concat/{sample}.{ref}.whatshap_intermediate.tsv"
     params: "-a -Oz"
@@ -172,6 +172,3 @@ rule merge_haplotagged_bams:
     conda: "envs/samtools.yaml"
     message: "Executing {rule}: Merging {input}."
     shell: "(samtools merge -@ 7 {output} {input}) > {log} 2>&1"
-
-
-# TODO: cleanup whatshap intermediates

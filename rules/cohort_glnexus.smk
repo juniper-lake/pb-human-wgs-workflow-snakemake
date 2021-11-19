@@ -110,6 +110,3 @@ rule whatshap_stats:
             --chr-lengths {input.chr_lengths} \
             {input.vcf}) > {log} 2>&1
         """
-
-
-# TODO: cleanup whatshap intermediates

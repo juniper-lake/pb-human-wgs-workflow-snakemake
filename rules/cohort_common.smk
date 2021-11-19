@@ -3,7 +3,7 @@ localrules: bgzip_vcf, tabix_vcf, tabix_bcf, create_ped
 
 rule bgzip_vcf:
     input: f"cohorts/{cohort}/{{prefix}}.vcf"
-    output: f"cohorts/{cohort}/{{prefix}}.vcf.gz"
+    output: temp(f"cohorts/{cohort}/{{prefix}}.vcf.gz")
     log: f"cohorts/{cohort}/logs/bgzip/{{prefix}}.log"
     benchmark: f"cohorts/{cohort}/benchmarks/bgzip/{{prefix}}.tsv"
     threads: 2
@@ -14,7 +14,7 @@ rule bgzip_vcf:
 
 rule tabix_vcf:
     input: f"cohorts/{cohort}/{{prefix}}.vcf.gz"
-    output: f"cohorts/{cohort}/{{prefix}}.vcf.gz.tbi"
+    output: temp(f"cohorts/{cohort}/{{prefix}}.vcf.gz.tbi")
     log: f"cohorts/{cohort}/logs/tabix/index/{{prefix}}.log"
     benchmark: f"cohorts/{cohort}/benchmarks/tabix/index/{{prefix}}.tsv"
     params: "-p vcf"

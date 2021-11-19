@@ -56,9 +56,9 @@ rule deepvariant_postprocess_variants_round1:
         tfrecord = f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.call_variants_output.tfrecord.gz",
         reference = config['ref']['fasta']
     output:
-        vcf = f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.vcf.gz",
-        vcf_index = f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.vcf.gz.tbi",
-        report = f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.visual_report.html"
+        vcf = temp(f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.vcf.gz"),
+        vcf_index = temp(f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.vcf.gz.tbi"),
+        report = temp(f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.visual_report.html")
     log: f"samples/{sample}/logs/deepvariant_intermediate/postprocess_variants/{sample}.{ref}.log"
     benchmark: f"samples/{sample}/benchmarks/deepvariant_intermediate/postprocess_variants/{sample}.{ref}.tsv"
     container: f"docker://google/deepvariant:{config['DEEPVARIANT_VERSION']}"
@@ -184,6 +184,3 @@ rule deepvariant_bcftools_roh:
         | awk -v OFS='\t' '$1=="RG" {{ print $3, $4, $5, $8 }}' \
         >> {output}) > {log} 2>&1
         """
-
-
-# TODO: cleanup deepvariant intermediates
