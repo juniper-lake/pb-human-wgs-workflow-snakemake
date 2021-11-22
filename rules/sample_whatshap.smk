@@ -56,7 +56,8 @@ rule whatshap_haplotag_round1:
         reference = config['ref']['fasta'],
         vcf = f"samples/{sample}/whatshap_intermediate/{sample}.{ref}.deepvariant.phased.vcf.gz",
         tbi = f"samples/{sample}/whatshap_intermediate/{sample}.{ref}.deepvariant.phased.vcf.gz.tbi",
-        bam = lambda wildcards: abam_dict[wildcards.movie]
+        bam = lambda wildcards: abam_dict[wildcards.movie],
+        bai = lambda wildcards: f"{abam_dict[wildcards.movie]}.bai"
     output: temp(f"samples/{sample}/whatshap_intermediate/{sample}.{ref}.{{movie}}.deepvariant.haplotagged.bam")
     log: f"samples/{sample}/logs/whatshap/haplotag/{sample}.{ref}.{{movie}}.whatshap_intermediate.log"
     benchmark: f"samples/{sample}/benchmarks/whatshap/haplotag/{sample}.{ref}.{{movie}}.whatshap_intermediate.tsv"
@@ -151,7 +152,8 @@ rule whatshap_haplotag_round2:
         reference = config['ref']['fasta'],
         vcf = f"samples/{sample}/whatshap/{sample}.{ref}.deepvariant.phased.vcf.gz",
         tbi = f"samples/{sample}/whatshap/{sample}.{ref}.deepvariant.phased.vcf.gz.tbi",
-        bam = lambda wildcards: abam_dict[wildcards.movie]
+        bam = lambda wildcards: abam_dict[wildcards.movie],
+        bai = lambda wildcards: f"{abam_dict[wildcards.movie]}.bai"
     output: temp(f"samples/{sample}/whatshap/{sample}.{ref}.{{movie}}.deepvariant.haplotagged.bam")
     log: f"samples/{sample}/logs/whatshap/haplotag/{sample}.{ref}.{{movie}}.log"
     benchmark: f"samples/{sample}/benchmarks/whatshap/haplotag/{sample}.{ref}.{{movie}}.tsv"
