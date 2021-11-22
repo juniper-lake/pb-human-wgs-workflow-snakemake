@@ -136,8 +136,8 @@ rule deepvariant_postprocess_variants_round2:
                                           shard=range(config['N_SHARDS'])),
         reference = config['ref']['fasta']
     output:
-        vcf = f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.vcf.gz",
-        vcf_index = f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.vcf.gz.tbi",
+        vcf = temp(f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.vcf.gz"),
+        vcf_index = temp(f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.vcf.gz.tbi"),
         gvcf = f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.g.vcf.gz",
         gvcf_index = f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.g.vcf.gz.tbi",
         report = f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.visual_report.html"
