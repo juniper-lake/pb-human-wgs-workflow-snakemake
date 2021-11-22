@@ -3,14 +3,16 @@ localrules: whatshap_bcftools_concat_round1, whatshap_bcftools_concat_round2
 
 
 rule split_deepvariant_vcf_round1:
-    input: f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.vcf.gz",
+    input:
+        vcf = f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.vcf.gz",
+        tbi = f"samples/{sample}/deepvariant_intermediate/{sample}.{ref}.deepvariant.vcf.gz.tbi"
     output: temp(f"samples/{sample}/whatshap_intermediate/{sample}.{ref}.regions/{sample}.{ref}.{{region}}.deepvariant.vcf")
     log: f"samples/{sample}/logs/tabix/query/{sample}.{ref}.{{region}}.deepvariant_intermediate.vcf.log"
     benchmark: f"samples/{sample}/benchmarks/tabix/query/{sample}.{ref}.{{region}}.deepvariant_intermediate.vcf.tsv"
     params: region = lambda wildcards: wildcards.region, extra = '-h'
     conda: "envs/htslib.yaml"
-    message: "Executing {rule}: Extracting {wildcards.region} variants from {input}."
-    shell: "tabix {params.extra} {input} {params.region} > {output} 2> {log}"
+    message: "Executing {rule}: Extracting {wildcards.region} variants from {input.vcf}."
+    shell: "tabix {params.extra} {input.vcf} {params.region} > {output} 2> {log}"
 
 
 rule whatshap_phase_round1:
@@ -71,14 +73,16 @@ rule whatshap_haplotag_round1:
 
 
 rule split_deepvariant_vcf_round2:
-    input: f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.vcf.gz",
+    input:
+        vcf = f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.vcf.gz",
+        tbi = f"samples/{sample}/deepvariant/{sample}.{ref}.deepvariant.vcf.gz.tbi"
     output: temp(f"samples/{sample}/whatshap/{sample}.{ref}.regions/{sample}.{ref}.{{region}}.deepvariant.vcf")
     log: f"samples/{sample}/logs/tabix/query/{sample}.{ref}.{{region}}.deepvariant.vcf.log"
     benchmark: f"samples/{sample}/benchmarks/tabix/query/{sample}.{ref}.{{region}}.deepvariant.vcf.tsv"
     params: region = lambda wildcards: wildcards.region, extra = '-h'
     conda: "envs/htslib.yaml"
-    message: "Executing {rule}: Extracting {wildcards.region} variants from {input}."
-    shell: "tabix {params.extra} {input} {params.region} > {output} 2> {log}"
+    message: "Executing {rule}: Extracting {wildcards.region} variants from {input.vcf}."
+    shell: "tabix {params.extra} {input.vcf} {params.region} > {output} 2> {log}"
 
 
 rule whatshap_phase_round2:
