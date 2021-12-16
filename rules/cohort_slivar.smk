@@ -48,26 +48,28 @@ rule bcftools_norm:
     shell: "(bcftools norm {params} {input.vcf} -o {output}) > {log} 2>&1"
 
 
+slivar_filters = [
+        f"""--info 'variant.FILTER==\"PASS\" \
+                && INFO.gnomad_af <= {config['max_gnomad_af']} \
+                && INFO.hprc_af <= {config['max_hprc_af']} \
+                && INFO.gnomad_nhomalt <= {config['max_gnomad_nhomalt']} \
+                && INFO.hprc_nhomalt <= {config['max_hprc_nhomalt']}'""",
+        "--family-expr 'recessive:fam.every(segregating_recessive)'",
+        "--family-expr 'x_recessive:(variant.CHROM == \"chrX\") && fam.every(segregating_recessive_x)'",
+        f"""--family-expr 'dominant:fam.every(segregating_dominant) \
+                       && INFO.gnomad_ac <= {config['max_gnomad_ac']} \
+                       && INFO.hprc_ac <= {config['max_hprc_ac']}'""",
+        f"""--family-expr 'x_dominant:(variant.CHROM == \"chrX\") \
+                       && fam.every(segregating_dominant_x) \
+                       && INFO.gnomad_ac <= {config['max_gnomad_ac']} \
+                       && INFO.hprc_ac <= {config['max_hprc_ac']}'""",
+]
 if singleton:
     # singleton
-    slivar_filters = [
-        "--info 'variant.FILTER==\"PASS\" && INFO.gnomad_af < 0.01 && INFO.hprc_af < 0.01 && INFO.gnomad_nhomalt < 5 && INFO.hprc_nhomalt < 5'",
-        "--family-expr 'recessive:fam.every(segregating_recessive)'",
-        "--family-expr 'x_recessive:(variant.CHROM == \"chrX\") && fam.every(segregating_recessive_x)'",
-        "--family-expr 'dominant:fam.every(segregating_dominant) && INFO.gnomad_ac < 5 && INFO.hprc_ac < 5'",
-        "--family-expr 'x_dominant:(variant.CHROM == \"chrX\") && fam.every(segregating_dominant_x) && INFO.gnomad_ac < 5 && INFO.hprc_ac < 5'",
-        "--sample-expr 'comphet_side:sample.het && sample.GQ > 5'"
-        ]
+    slivar_filters.append(f"--sample-expr 'comphet_side:sample.het && sample.GQ > {config['min_gq']}'")
 else:
     # trio cohort
-    slivar_filters = [
-        "--info 'variant.FILTER==\"PASS\" && INFO.gnomad_af < 0.01 && INFO.hprc_af < 0.01 && INFO.gnomad_nhomalt < 5 && INFO.hprc_nhomalt < 5'",
-        "--family-expr 'recessive:fam.every(segregating_recessive)'",
-        "--family-expr 'x_recessive:(variant.CHROM == \"chrX\") && fam.every(segregating_recessive_x)'",
-        "--family-expr 'dominant:fam.every(segregating_dominant) && INFO.gnomad_ac < 5 && INFO.hprc_ac < 5'",
-        "--family-expr 'x_dominant:(variant.CHROM == \"chrX\") && fam.every(segregating_dominant_x) && INFO.gnomad_ac < 5 && INFO.hprc_ac < 5'",
-        "--trio 'comphet_side:comphet_side(kid, mom, dad) && kid.affected'"
-    ]
+    slivar_filters.append("--trio 'comphet_side:comphet_side(kid, mom, dad) && kid.affected'")
 
 
 rule slivar_small_variant:
@@ -181,8 +183,10 @@ rule slivar_tsv:
             --gene-description {input.clinvar_lookup} \
             --gene-description {input.phrank_lookup} \
             --ped {input.ped} \
-            --out {output.filt_tsv} \
-            {input.filt_vcf}
+            --out /dev/stdout \
+            {input.filt_vcf} \
+            | sed '1 s/gene_description_1/lof/;s/gene_description_2/clinvar/;s/gene_description_3/phrank/;' \
+            > {output.filt_tsv}
         slivar tsv \
             {params.info} \
             --sample-field slivar_comphet \
@@ -192,6 +196,8 @@ rule slivar_tsv:
             --gene-description {input.clinvar_lookup} \
             --gene-description {input.phrank_lookup} \
             --ped {input.ped} \
-            --out {output.comphet_tsv} \
-            {input.comphet_vcf}) > {log} 2>&1
+            --out /dev/stdout \
+            {input.comphet_vcf} \
+            | sed '1 s/gene_description_1/lof/;s/gene_description_2/clinvar/;s/gene_description_3/phrank/;' \
+            > {output.comphet_tsv}) > {log} 2>&1
         """
