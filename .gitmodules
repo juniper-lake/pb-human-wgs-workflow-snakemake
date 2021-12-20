@@ -4,3 +4,6 @@
 [submodule "scripts/svpack"]
 	path = scripts/svpack
 	url = https://github.com/PacificBiosciences/svpack.git
+[submodule "scripts/pav"]
+	path = scripts/pav
+	url = https://github.com/EichlerLab/pav.git
