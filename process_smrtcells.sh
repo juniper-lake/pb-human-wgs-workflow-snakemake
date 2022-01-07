@@ -9,6 +9,9 @@
 # set umask to avoid locking each other out of directories
 umask 002
 
+# get variables from workflow/variables.env
+source workflow/variables.env
+
 # execute snakemake
 snakemake --reason \
     --rerun-incomplete \
