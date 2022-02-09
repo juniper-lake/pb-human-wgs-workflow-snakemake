@@ -10,7 +10,17 @@
 umask 002
 
 # execute snakemake
-snakemake \
+snakemake --reason \
+    --rerun-incomplete \
+    --keep-going \
     --local-cores 1 \
-    --profile workflow/profiles/slurm \
+    --jobs 500 \
+    --max-jobs-per-second 1 \
+    --use-conda --conda-frontend mamba \
+    --latency-wait 120 \
+    --cluster-config workflow/process_smrtcells.cluster.yaml \
+    --cluster "sbatch --account={cluster.account} \
+                      --partition={cluster.partition} \
+                      --cpus-per-task={cluster.cpus} \
+                      --output={cluster.out} {cluster.extra} " \
     --snakefile workflow/process_smrtcells.smk
