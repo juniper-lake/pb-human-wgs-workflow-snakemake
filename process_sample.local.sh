@@ -23,6 +23,5 @@ snakemake --reason \
     --use-conda --conda-frontend mamba \
     --use-singularity \
     --default-resources "tmpdir=system_tmpdir" \
-    --latency-wait 120 \
     --snakefile workflow/process_sample.smk \
     2>&1 | tee "logs/process_sample.${SAMPLE}.$(date -d 'today' +'%Y%m%d%H%M').log"
