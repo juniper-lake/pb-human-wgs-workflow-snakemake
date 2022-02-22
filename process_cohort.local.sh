@@ -20,8 +20,7 @@ snakemake --reason \
     --config cohort=${COHORT} \
     --nolock \
     --cores 78 \
-    --max-jobs-per-second 1 \
     --use-conda --conda-frontend mamba \
     --use-singularity \
-    --latency-wait 90 \
-    --snakefile workflow/process_cohort.smk | tee logs/process_cohort.${COHORT}.$(date -d "today" +"%Y%m%d%H%M").log
+    --default-resources "tmpdir=system_tmpdir" \
+    --snakefile workflow/process_cohort.smk 2>&1 | tee "logs/process_cohort.${COHORT}.$(date -d 'today' +'%Y%m%d%H%M').log"
