@@ -13,4 +13,5 @@ snakemake --reason \
     --cores 78 \
     --use-conda --conda-frontend mamba \
     --default-resources "tmpdir=system_tmpdir" \
-    --snakefile workflow/process_smrtcells.smk 2>&1 | tee "logs/process_smrtcells.$(date -d 'today' +'%Y%m%d%H%M').log"
+    --snakefile workflow/process_smrtcells.smk \
+    2>&1 | tee "logs/process_smrtcells.$(date -d 'today' +'%Y%m%d%H%M').log"

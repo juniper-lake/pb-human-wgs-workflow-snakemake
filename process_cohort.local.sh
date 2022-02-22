@@ -23,4 +23,5 @@ snakemake --reason \
     --use-conda --conda-frontend mamba \
     --use-singularity \
     --default-resources "tmpdir=system_tmpdir" \
-    --snakefile workflow/process_cohort.smk 2>&1 | tee "logs/process_cohort.${COHORT}.$(date -d 'today' +'%Y%m%d%H%M').log"
+    --snakefile workflow/process_cohort.smk \
+    2>&1 | tee "logs/process_cohort.${COHORT}.$(date -d 'today' +'%Y%m%d%H%M').log"
