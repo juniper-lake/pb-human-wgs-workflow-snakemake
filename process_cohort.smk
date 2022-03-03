@@ -7,7 +7,7 @@ from collections import defaultdict
 
 configfile: "workflow/reference.yaml"         # reference information
 configfile: "workflow/config.yaml"            # general configuration
-shell.prefix(f"set -o pipefail; umask 002; export TMPDIR={config['tmpdir']}; export SINGULARITY_TMPDIR={config['tmpdir']}; ")  # set g+w
+shell.prefix(f"set -o pipefail; umask 002; ")  # set g+w
 
 
 def get_samples(cohortyaml=config['cohort_yaml'], cohort_id=config['cohort']):
@@ -69,9 +69,9 @@ else:
 
 # scan smrtcells/ready directory for uBAMs or FASTQs that are ready to process
 # uBAMs have priority over FASTQs in downstream processes if both are available
-ubam_pattern = re.compile(r'smrtcells/ready/(?P<sample>[A-Za-z0-9_-]+)/(?P<movie>m\d{5}[Ue]?_\d{6}_\d{6}).(ccs|hifi_reads).bam')
+ubam_pattern = re.compile(r'smrtcells/ready/(?P<sample>[A-Za-z0-9_-]+)/(?P<movie>[A-Za-z0-9._-]+).bam')
 ubam_dict = defaultdict(dict)
-fastq_pattern = re.compile(r'smrtcells/ready/(?P<sample>[A-Za-z0-9_-]+)/(?P<movie>m\d{5}[Ue]?_\d{6}_\d{6}).fastq.gz')
+fastq_pattern = re.compile(r'smrtcells/ready/(?P<sample>[A-Za-z0-9_-]+)/(?P<movie>[A-Za-z0-9._-]+).fastq.gz')
 fastq_dict = defaultdict(dict)
 for infile in Path('smrtcells/ready').glob('**/*.bam'):
     ubam_match = ubam_pattern.search(str(infile))
@@ -87,7 +87,7 @@ for infile in Path('smrtcells/ready').glob('**/*.fastq.gz'):
 ubam_fastq_dict = {sample:list(set(list(ubam_dict[sample].keys()) + list(fastq_dict[sample].keys()))) for sample in list(ubam_dict.keys()) + list(fastq_dict.keys())}
 
 # scan samples/*/aligned to generate a dict-of-lists-of-movies for 
-pattern = re.compile(r'samples/(?P<sample>[A-Za-z0-9_-]+)/aligned/(?P<movie>m\d{5}[Ue]?_\d{6}_\d{6})\.(?P<reference>.*).bam')
+pattern = re.compile(r'samples/(?P<sample>[A-Za-z0-9_-]+)/aligned/(?P<movie>[A-Za-z0-9._-]+)\.(?P<reference>[A-Za-z0-9_-]+).bam')
 movie_dict = defaultdict(list)
 abam_list = []
 for infile in Path(f"samples").glob('**/aligned/*.bam'):
@@ -95,6 +95,8 @@ for infile in Path(f"samples").glob('**/aligned/*.bam'):
     if match and (match.group('sample') in samples) and (match.group('reference') == ref):
         movie_dict[match.group('sample')].append(match.group('movie'))
         abam_list.append(infile)
+
+print(abam_list)
 
 # singletons and cohorts provide different input to slivar and svpack
 if singleton:

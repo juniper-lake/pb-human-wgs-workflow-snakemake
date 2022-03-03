@@ -5,6 +5,8 @@ umask 002
 
 mkdir -p logs
 
+source workflow/variables.env
+
 # execute snakemake
 snakemake --reason \
     --rerun-incomplete \
@@ -12,6 +14,6 @@ snakemake --reason \
     --keep-going \
     --cores 78 \
     --use-conda --conda-frontend mamba \
-    --default-resources "tmpdir=system_tmpdir" \
+    --default-resources "tmpdir='${TEMP}'" \
     --snakefile workflow/process_smrtcells.smk \
     2>&1 | tee "logs/process_smrtcells.$(date -d 'today' +'%Y%m%d%H%M').log"
