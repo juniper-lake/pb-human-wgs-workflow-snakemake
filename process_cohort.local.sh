@@ -22,7 +22,6 @@ snakemake --reason \
     --keep-going \
     --printshellcmds \
     --config cohort=${COHORT} \
-    --nolock \
     --cores 78 \
     --use-conda --conda-frontend mamba \
     --use-singularity \

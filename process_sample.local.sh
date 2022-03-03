@@ -23,7 +23,6 @@ snakemake --reason \
     --cores 78 \
     --printshellcmds \
     --config sample=${SAMPLE} \
-    --nolock \
     --use-conda --conda-frontend mamba \
     --use-singularity \
     --default-resources "tmpdir='${TEMP}'" \
